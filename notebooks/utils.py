@@ -3,9 +3,12 @@ import math
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
-from statsmodels import regression
+from statsmodels import regression, stats
 import matplotlib.pyplot as plt
 from statsmodels import regression
+import scipy as sp
+
+
 
 def get_top20_stocks(path, limit=20):
     """Return top20 stocks with total traded volume"""
@@ -83,3 +86,9 @@ def linreg(X,Y):
     plt.xlabel('X Value')
     plt.ylabel('Y Value')
     return model.summary()
+
+def linreg(X,Y):
+    # Running the linear regression
+    x = sm.add_constant(X) # Add a row of 1's so that our model has a constant term
+    model = regression.linear_model.OLS(Y, x).fit()
+    return model.params[0], model.params[1] # Return the coefficients of the linear model
