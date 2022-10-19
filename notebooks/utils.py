@@ -16,7 +16,8 @@ def get_top20_stocks(path, limit=20):
     files = os.listdir(path)
     for f in files:
         stock_list[f[:-4]] = pd.read_csv(f'{path}/{f}')['volume'].sum()
-    return sorted(stock_list.items())[:limit]
+    res = sorted(stock_list.items())[:limit]
+    return res
     
 def get_stocknames(path):
     symbs = []
@@ -92,3 +93,14 @@ def linreg(X,Y):
     x = sm.add_constant(X) # Add a row of 1's so that our model has a constant term
     model = regression.linear_model.OLS(Y, x).fit()
     return model.params[0], model.params[1] # Return the coefficients of the linear model
+
+
+def get_correaltion_btwn_assets(assetlist, datadir):
+    # correlation between top asset with others
+    combined = {}
+    startdate, enddate = 510, 960  # 15 months of data
+    for i in range(0, len(assetlist)):
+        df = get_prices(assetlist[i], path=datadir)[startdate:enddate]
+        combined[assetlist[i]] = df.close
+    finaldf = pd.DataFrame(combined)
+    return finaldf.corr()
